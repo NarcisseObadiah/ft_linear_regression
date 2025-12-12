@@ -168,7 +168,7 @@ def visualize_cost(iterations, cost_history):
 def r2_score(y_true, y_pred):
     """
     Compute the R² score (coefficient of determination).
-    This tells how much of the variation in Y your model explains.
+    This tells how much of the variation in Y the model explains.
 
     R² = 1 - (sum of squared errors / total variance)
     Interpretation:
