@@ -38,12 +38,10 @@ def estimate_price(mileage, theta0, theta1):
 
 if __name__ == "__main__":
     theta0, theta1 = load_thetas()
-
     try:
         mileage = float(input("Enter car mileage (km): "))
     except ValueError:
         print("Invalid mileage input.")
         sys.exit(1)
-
     price = estimate_price(mileage, theta0, theta1)
-    print(f"Estimated price: {price:.2f} €")
+    print(f"This car price is estimated around : {price:.2f} €")
