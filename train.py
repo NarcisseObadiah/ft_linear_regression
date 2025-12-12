@@ -10,14 +10,15 @@ import predic
 
 #  PRINTING HELPERS
 
-def print_result(theta0_norm, theta1_norm, theta0_denorm, theta1_denorm, cost):
+def print_result(theta0_norm, theta1_norm, theta0_denorm, theta1_denorm, cost, precision):
     """Pretty-print the training results."""
     results = [
         ("Theta0_norm", theta0_norm),
         ("Theta1_norm", theta1_norm),
-        ("Theta0_denorm", theta0_denorm),
-        ("Theta1_denorm", theta1_denorm),
-        ("Final Cost", cost),
+        ("Real Theta0 after denorm", theta0_denorm),
+        ("Real Theta1 after denorm", theta1_denorm),
+        ("Final Training Cost", cost),
+        ("Model Precision (R2 score)", precision)
     ]
 
     print("-" * 49)
@@ -198,6 +199,24 @@ def r2_score(y_true, y_pred):
     return r2_value
 
     
+def model_precision(theta0, theta1, x_raw, y_raw):
+    """
+    Compute R² precision using the REAL (denormalized) model.
+
+    Steps:
+        1. Rebuild predictions using: price = theta0 + theta1 * mileage
+        2. Compare predictions with the real prices using R²
+    """
+    predictions = []
+    for mileage in x_raw:
+        price = theta0 + theta1 * mileage
+        predictions.append(price)
+
+    # Compute and return R² score
+    precision_value = r2_score(y_raw, predictions)
+    return precision_value
+
+
 def get_input_choice():
     try:
         value = int(input("Proceed: "))
@@ -226,9 +245,10 @@ def main():
         # training always happens
         theta0_n, theta1_n, iters, cost_hist = train_model(theta1, theta0, x_norm, y_norm)
         theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_raw, y_raw)
-
+        precision = model_precision(theta0_d, theta1_d, x_raw, y_raw)
+        
         if choice == 1:
-            print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
+            print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1], precision)
         elif choice == 2:
             visualize_regression(theta0_d, theta1_d, x_raw, y_raw)
         elif choice == 3:
