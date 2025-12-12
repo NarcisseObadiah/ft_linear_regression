@@ -1,63 +1,48 @@
 import json
 import sys
 
-# ---------------------------------------------------------
 # Load saved thetas
-# ---------------------------------------------------------
-def load_thetas(filename="thetas.json"):
+def load_thetas(filename="values.json"):
     """
-    Load theta0 and theta1 from JSON file.
-    These thetas are expected to be denormalized (real scale)
-    and therefore accept raw mileage (km) as input.
+    Load Theta0 and Theta1 from JSON file produced by training.
+    These values are already denormalized, so they accept raw mileage.
     """
     try:
         with open(filename, "r") as f:
             data = json.load(f)
     except FileNotFoundError:
-        print("Error: 'thetas.json' not found. Run training first.")
+        print("Error: 'values.json' not found. Run training first.")
         sys.exit(1)
     except json.JSONDecodeError:
-        print("Error: 'thetas.json' contains invalid JSON.")
+        print("Error: 'values.json' contains invalid JSON.")
         sys.exit(1)
 
-    # Validate presence of required keys
+    # Validate keys
     try:
-        theta0 = float(data["theta0"])
-        theta1 = float(data["theta1"])
+        theta0 = float(data["Theta0"])
+        theta1 = float(data["Theta1"])
     except KeyError:
-        print("Error: 'thetas.json' missing keys 'theta0' and/or 'theta1'.")
+        print("Error: Missing keys 'Theta0' or 'Theta1' in values.json.")
         sys.exit(1)
     except (TypeError, ValueError):
-        print("Error: Invalid theta values in 'thetas.json'.")
+        print("Error: Invalid numeric data in values.json.")
         sys.exit(1)
 
     return theta0, theta1
 
 
-# ---------------------------------------------------------
-# Prediction logic (uses raw mileage — NOT normalized)
-# ---------------------------------------------------------
+# prediction logic-- > f(x) = Wxi + B
 def estimate_price(mileage, theta0, theta1):
-    """
-    Estimate the price given raw mileage (in km) using:
-        price = theta0 + theta1 * mileage
-    theta0 and theta1 must be on the same (raw) scale.
-    """
+    """price = theta0 + theta1 * mileage"""
     return theta0 + theta1 * mileage
 
-
-# ---------------------------------------------------------
-# CLI mode
-# ---------------------------------------------------------
 if __name__ == "__main__":
     theta0, theta1 = load_thetas()
 
-    # Ask user for mileage
     try:
-        mileage_input = input("Enter car mileage (km): ")
-        mileage = float(mileage_input)
+        mileage = float(input("Enter car mileage (km): "))
     except ValueError:
-        print("Invalid mileage value.")
+        print("Invalid mileage input.")
         sys.exit(1)
 
     price = estimate_price(mileage, theta0, theta1)

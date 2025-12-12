@@ -57,6 +57,7 @@ def normalize(data):
 def denormalize(theta0_norm, theta1_norm, x_raw, y_raw):
     """
     Convert normalized thetas back to original scale.
+    theta0 --> b and theta1 --> w  | --> f(x) = wxi + b
     """
     x_range = max(x_raw) - min(x_raw)
     y_range = max(y_raw) - min(y_raw)
@@ -191,7 +192,6 @@ def main():
         theta0_n, theta1_n, iters, cost_hist = train_model(theta1, theta0, x_norm, y_norm)
         theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_raw, y_raw)
 
-        # Menu choices
         if choice == 1:
             print_result(theta0_n, theta1_n, theta0_d, theta1_d, cost_hist[-1])
         elif choice == 2:
