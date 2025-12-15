@@ -10,12 +10,66 @@ from utils import (
     save_thetas,
     normalize,
     denormalize,
-    train_model,
     display_regression_plot,
     display_cost_plot,
     model_precision,
     get_input_choice,
 )
+
+
+# Core training helpers
+
+def error(theta1, theta0, mileage, price):
+    """Compute prediction error: (theta0 + theta1 * x) - y."""
+    return (theta0 + theta1 * mileage) - price
+
+
+def gradient_theta1(theta1, theta0, mileage_data, price_data):
+    m = len(mileage_data)
+    total = 0
+    for x, y in zip(mileage_data, price_data):
+        total += error(theta1, theta0, x, y) * x
+    return total / m
+
+
+def gradient_theta0(theta1, theta0, mileage_data, price_data):
+    m = len(mileage_data)
+    total = 0
+    for x, y in zip(mileage_data, price_data):
+        total += error(theta1, theta0, x, y)
+    return total / m
+
+
+def apply_gradient_descent(theta1, theta0, mileage_data, price_data, learning_rate=0.1):
+    grad0 = gradient_theta0(theta1, theta0, mileage_data, price_data)
+    grad1 = gradient_theta1(theta1, theta0, mileage_data, price_data)
+
+    theta0 -= learning_rate * grad0
+    theta1 -= learning_rate * grad1
+
+    return theta0, theta1
+
+
+def squared_error(theta1, theta0, mileage_data, price_data):
+    total = 0
+    for x, y in zip(mileage_data, price_data):
+        total += error(theta1, theta0, x, y) ** 2
+    return total
+
+
+def cost(theta1, theta0, mileage_data, price_data):
+    m = len(mileage_data)
+    return (1 / (2 * m)) * squared_error(theta1, theta0, mileage_data, price_data)
+
+
+def train_model(theta1, theta0, mileage_data, price_data, iterations=1000):
+    cost_history = []
+
+    for _ in range(iterations):
+        cost_history.append(cost(theta1, theta0, mileage_data, price_data))
+        theta0, theta1 = apply_gradient_descent(theta1, theta0, mileage_data, price_data)
+
+    return theta0, theta1, iterations, cost_history
 
 
 def load_data():

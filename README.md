@@ -154,9 +154,9 @@ Plots are saved as:
 ```
 ft_linear_regression/
 ├── data.csv              # Dataset (mileage, price)
-├── train.py              # Main training script with load_data() helper
+├── train.py              # Main training script (load_data, training loop, gradients/cost)
 ├── predic.py             # Predict price for a given mileage
-├── utils.py              # Core functions (gradient descent, normalization, visualization)
+├── utils.py              # Display, normalization, visualization, precision helpers
 ├── thetas.json           # Saved model parameters (theta0, theta1)
 ├── plot.png              # Regression plot (generated)
 ├── cost_plot.png         # Cost plot (generated)
@@ -166,16 +166,8 @@ ft_linear_regression/
 
 ### File Descriptions
 
-- **train.py**: Main training workflow with `load_data()` function for data loading/validation and `main()` for training loop
-- **utils.py**: Contains helper functions:
-  - `display_result()` - Print training summary
-  - `show_menu()` - Display menu options
-  - `save_thetas()` / `load_thetas()` - Save/load model parameters
-  - `normalize()` / `denormalize()` - Data scaling functions
-  - `train_model()` - Gradient descent training loop
-  - `display_regression_plot()` / `display_cost_plot()` - Visualization functions
-  - `model_precision()` - Calculate R² score
-  - `get_input_choice()` - Handle user input
+- **train.py**: Main training workflow; contains `load_data()` plus training logic (gradients, cost, `train_model`) and menu handling
+- **utils.py**: UI/utility helpers: `display_result()`, `show_menu()`, `save_thetas()`, `normalize()/denormalize()`, `display_regression_plot()/display_cost_plot()`, `model_precision()`, `get_input_choice()`
 - **predic.py**: Standalone prediction script using saved parameters from `thetas.json`
 
 ---
