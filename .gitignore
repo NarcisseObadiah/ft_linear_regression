@@ -1,2 +1,7 @@
-./__pycache__/
-./vscode/
+__pycache__/
+.vscode/
+.venv/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
